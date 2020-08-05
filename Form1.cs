@@ -14,17 +14,32 @@ namespace myScheduler
 {
     public partial class Form1 : Form
     {
-        static string connectionString = "server=localhost;user=guest;database=myscheduler;";
-        MySqlConnection connection = new MySqlConnection(connectionString);
+        static string connectionString = "server=localhost;user=guest;database=myscheduler;charset=utf8";
+        MySqlConnection connection;
 
-        string selectq = "SELECT task_name,pk FROM mytask WHERE due_date=@date AND status=0 ORDER BY priority DESC;";
+        string selectq = "SELECT task_name,pk,priority FROM mytask WHERE due_date=@date AND status=0 ORDER BY priority DESC;";
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        public void Form1_Load(object sender, EventArgs e)
         {
+            update_todobox();
+        }
+
+
+        private void newToDo_Click(object sender, EventArgs e)
+        {
+            insertTodo myTask = new insertTodo();
+            myTask.ShowDialog();
+            toDoBox.Items.Clear();
+            update_todobox();
+        }
+
+        private void update_todobox()
+        {
+            connection = new MySqlConnection(connectionString);
             connection.Open();
 
             MySqlCommand command = new MySqlCommand();
@@ -33,30 +48,36 @@ namespace myScheduler
             command.Parameters.Add("@date", MySqlDbType.Date);
             command.Parameters[0].Value = mainCalender.SelectionRange.Start.ToString("yyyy-MM-dd");
 
-            DataSet ds = new DataSet();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            adapter.SelectCommand = command;
-            adapter.Fill(ds);
+            MySqlDataReader rd = command.ExecuteReader();
 
-
-            if(ds.Tables.Count > 0)
+            while (rd.Read())
             {
-                foreach(DataRow r in ds.Tables[0].Rows)
-                {
-                    toDoBox.Items.Add(r["pk"]+".\t"+r["task_name"]);
-                }
+                toDoBox.Items.Add(rd["pk"] + ".\t" + rd["task_name"]);
             }
-            
+
+            rd.Close();
             connection.Close();
         }
 
-
-        private void newToDo_Click(object sender, EventArgs e)
+        private void mainCalender_DateSelected(object sender, DateRangeEventArgs e)
         {
-            insertTodo myTask = new insertTodo();
-            myTask.ShowDialog();
+            toDoBox.Items.Clear();
+            update_todobox();
         }
 
-      
+        private void toDoBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach(ListViewItem li in toDoBox.Items)
+            {
+                if (li.Font.Style == FontStyle.Strikeout && !li.Selected)
+                {
+                    li.Font = new Font("굴림", 9);
+                }
+                else if (li.Selected)
+                {
+                    li.Font = new Font("굴림", 9, FontStyle.Strikeout);
+                }
+            }
+        }
     }
 }

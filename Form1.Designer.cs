@@ -32,6 +32,7 @@
             this.toDoBox = new System.Windows.Forms.CheckedListBox();
             this.newToDo = new System.Windows.Forms.Button();
             this.mainCalender = new System.Windows.Forms.MonthCalendar();
+            this.finishButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -51,7 +52,6 @@
             this.toDoBox.Name = "toDoBox";
             this.toDoBox.Size = new System.Drawing.Size(393, 284);
             this.toDoBox.TabIndex = 1;
-            
             // 
             // newToDo
             // 
@@ -68,18 +68,32 @@
             this.mainCalender.Location = new System.Drawing.Point(61, 121);
             this.mainCalender.Name = "mainCalender";
             this.mainCalender.TabIndex = 3;
+            this.mainCalender.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.mainCalender_DateSelected);
+            // 
+            // finishButton
+            // 
+            this.finishButton.Location = new System.Drawing.Point(595, 391);
+            this.finishButton.Name = "finishButton";
+            this.finishButton.Size = new System.Drawing.Size(180, 37);
+            this.finishButton.TabIndex = 4;
+            this.finishButton.Text = "Done";
+            this.finishButton.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Info;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.finishButton);
             this.Controls.Add(this.mainCalender);
             this.Controls.Add(this.newToDo);
             this.Controls.Add(this.toDoBox);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.Name = "Form1";
             this.Text = "My Scheduler";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -91,6 +105,7 @@
         private System.Windows.Forms.CheckedListBox toDoBox;
         private System.Windows.Forms.Button newToDo;
         private System.Windows.Forms.MonthCalendar mainCalender;
+        private System.Windows.Forms.Button finishButton;
     }
 }
 

@@ -24,7 +24,6 @@ namespace myScheduler
         {
             this.Close();
         }
-
         private void savebutton_Click(object sender, EventArgs e)
         {
             var connectionString = "server=localhost;user=guest;database=myscheduler;";
@@ -37,12 +36,14 @@ namespace myScheduler
             try
             {
                 MySqlCommand command = new MySqlCommand(insertq, connection);
+                command.ExecuteNonQuery();
             }
             catch(Exception ex)
             {
                 MessageBox.Show("mysql insert error!\nPlease retry.","System");
             }
             connection.Close();
+
             this.Close();
         }
     }
